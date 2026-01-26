@@ -78,7 +78,6 @@ const AllMovies = () => {
                         src={movie.posterUrl}
                         alt={movie.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        // onError={(e) => e.target.src = 'https://via.placeholder.com/300x400?text=No+Poster'}
                     />
                     {/* Rating Badge */}
                     <div className="absolute top-3 right-3 bg-[#EAB308] text-black font-bold px-3 py-1 rounded-lg text-sm">
@@ -109,7 +108,7 @@ const AllMovies = () => {
                             }}
                             className="flex-1 bg-linear-to-r from-[#4F46E5] to-[#7C3AED] text-white font-bold py-2 rounded-lg hover:shadow-lg transition-all flex items-center justify-center gap-2 group/btn"
                         >
-                            Details
+                            View Details
                             <HiOutlineArrowRight className="group-hover/btn:translate-x-1 transition-transform" />
                         </button>
                     </div>
@@ -131,7 +130,6 @@ const AllMovies = () => {
                     src={movie.posterUrl}
                     alt={movie.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    // onError={(e) => e.target.src = 'https://via.placeholder.com/800x400?text=No+Poster'}
                 />
 
                 {/* Overlay */}
@@ -172,7 +170,6 @@ const AllMovies = () => {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5 }}
                 >
-                    {/* Animated Spinner */}
                     <div className="relative w-24 h-24 mx-auto mb-8">
                         <motion.div
                             className="absolute inset-0 rounded-full border-4 border-[#4F46E5] border-t-[#EAB308]"
@@ -189,11 +186,9 @@ const AllMovies = () => {
                         </div>
                     </div>
 
-                    {/* Loading Text */}
                     <h1 className="text-3xl font-black text-white mb-2">Loading Movies</h1>
                     <p className="text-white/60 text-lg">Please wait while we fetch the content for you...</p>
 
-                    {/* Loading Bar */}
                     <div className="mt-8 w-64 mx-auto">
                         <div className="h-1 bg-white/10 rounded-full overflow-hidden">
                             <motion.div
@@ -204,7 +199,6 @@ const AllMovies = () => {
                         </div>
                     </div>
 
-                    {/* Loading Dots */}
                     <div className="flex gap-2 justify-center mt-6">
                         {[0, 1, 2].map((dot) => (
                             <motion.div
