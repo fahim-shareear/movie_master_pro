@@ -6,7 +6,13 @@ import ErrorpageOne from './errorpages/ErrorpageOne';
 import Root from './root/Root';
 import Home from './pages/Home';
 import AllMovies from './pages/AllMovies';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import AddMovies from './pages/AddMovies';
+import MyCollection from './pages/MyCollection';
+import MovieDetails from './pages/MovieDetails';
 import AuthProvider from './providers/AuthProvider';
+import PrivateRoutes from './routes/PrivateRoutes';
 
 const router = createBrowserRouter([
   {
@@ -15,6 +21,17 @@ const router = createBrowserRouter([
     children:[
       {index: true, Component: Home},
       {path: '/allmovie', Component: AllMovies},
+      {path: '/login', Component: Login},
+      {path: '/register', Component: Register},
+      {path: '/movie/:id', Component: MovieDetails},
+      {
+        path: '/movies/add',
+        Component: () => <PrivateRoutes><AddMovies /></PrivateRoutes>
+      },
+      {
+        path: '/movies/my-collection',
+        Component: () => <PrivateRoutes><MyCollection /></PrivateRoutes>
+      },
     ]
   }
 ])

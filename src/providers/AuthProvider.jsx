@@ -39,7 +39,7 @@ const AuthProvider = ({children}) => {
                 const loggedUser = {email: currentUser.email};
                 // Request a JWT from the server. The server should set the JWT as an HttpOnly cookie
                 // via the Set-Cookie header. We include credentials so the browser accepts the cookie.
-                fetch('https://movie-master-pro-server.vercel.app/jwt', {
+                fetch('http://localhost:3000/jwt', {
                     method: 'POST',
                     headers: {
                         'content-type': 'application/json'
