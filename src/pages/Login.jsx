@@ -1,21 +1,37 @@
-import React, { useState, use } from 'react';
+import React, { useState, use, useRef } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router';
 import { AuthContext } from '../providers/AuthContext';
 import { FcGoogle } from 'react-icons/fc';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiOutlineX } from 'react-icons/hi';
+import { HiOutlineX, HiOutlineEye, HiOutlineEyeOff } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 
 const Login = () => {
     const { signInWithEmail, signInWithGoogle } = use(AuthContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [forgotEmail, setForgotEmail] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
+    const passwordVisibilityTimer = useRef(null);
+
+    const handlePasswordVisibilityToggle = () => {
+        setShowPassword(true);
+        
+        // Clear any existing timer
+        if (passwordVisibilityTimer.current) {
+            clearTimeout(passwordVisibilityTimer.current);
+        }
+        
+        // Set new timer to hide password after 5 seconds
+        passwordVisibilityTimer.current = setTimeout(() => {
+            setShowPassword(false);
+        }, 5000);
+    };
 
     const handleEmailLogin = async (e) => {
         e.preventDefault();
@@ -123,14 +139,27 @@ const Login = () => {
                         {/* Password Input */}
                         <div>
                             <label className="block text-white text-sm font-bold mb-2">Password <span className="text-red-500">*</span></label>
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                placeholder="••••••••"
-                                required
-                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] transition-all"
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="••••••••"
+                                    required
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pr-12 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] transition-all"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={handlePasswordVisibilityToggle}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-[#EAB308] transition-colors"
+                                >
+                                    {showPassword ? (
+                                        <HiOutlineEyeOff className="text-xl" />
+                                    ) : (
+                                        <HiOutlineEye className="text-xl" />
+                                    )}
+                                </button>
+                            </div>
                             <p className="text-white/40 text-xs mt-1">Min 6 chars: 1 uppercase, 1 lowercase</p>
                         </div>
 

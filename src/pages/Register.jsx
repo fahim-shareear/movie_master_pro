@@ -1,9 +1,10 @@
-import React, { useState, use } from 'react';
-import { useNavigate, Link } from 'react-router';
+import React, { useState, use, useRef } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router';
 import { AuthContext } from '../providers/AuthContext';
 import { FcGoogle } from 'react-icons/fc';
 import { motion } from 'framer-motion';
 import { updateProfile } from 'firebase/auth';
+import { HiOutlineEye, HiOutlineEyeOff } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 
 const Register = () => {
@@ -15,8 +16,13 @@ const Register = () => {
         confirmPassword: '',
         photoURL: ''
     });
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+    const passwordVisibilityTimer = useRef(null);
+    const confirmPasswordVisibilityTimer = useRef(null);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -24,6 +30,30 @@ const Register = () => {
             ...prev,
             [name]: value
         }));
+    };
+
+    const handlePasswordVisibilityToggle = () => {
+        setShowPassword(true);
+        
+        if (passwordVisibilityTimer.current) {
+            clearTimeout(passwordVisibilityTimer.current);
+        }
+        
+        passwordVisibilityTimer.current = setTimeout(() => {
+            setShowPassword(false);
+        }, 5000);
+    };
+
+    const handleConfirmPasswordVisibilityToggle = () => {
+        setShowConfirmPassword(true);
+        
+        if (confirmPasswordVisibilityTimer.current) {
+            clearTimeout(confirmPasswordVisibilityTimer.current);
+        }
+        
+        confirmPasswordVisibilityTimer.current = setTimeout(() => {
+            setShowConfirmPassword(false);
+        }, 5000);
     };
 
     const handleEmailRegister = async (e) => {
@@ -104,8 +134,9 @@ const Register = () => {
             // Show success toast
             toast.success('Registration successful! Welcome to MovieMaster PRO 🎬');
             
-            // Redirect to home after successful registration
-            setTimeout(() => navigate('/'), 1500);
+            // Redirect to the page user was trying to access, or home if coming directly from register
+            const from = location.state?.from?.pathname || '/';
+            setTimeout(() => navigate(from), 1500);
         } catch (err) {
             let errorMessage = 'Failed to register. Please try again.';
             
@@ -160,7 +191,8 @@ const Register = () => {
             }
 
             toast.success('Registration successful! Welcome to MovieMaster PRO 🎬');
-            setTimeout(() => navigate('/'), 1500);
+            const from = location.state?.from?.pathname || '/';
+            setTimeout(() => navigate(from), 1500);
         } catch (err) {
             const errorMessage = err.message || 'Failed to register with Google.';
             toast.error(errorMessage);
@@ -236,30 +268,56 @@ const Register = () => {
                         {/* Password Input */}
                         <div>
                             <label className="block text-white text-sm font-bold mb-2">Password <span className="text-red-500">*</span></label>
-                            <input
-                                type="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleInputChange}
-                                placeholder="••••••••"
-                                required
-                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] transition-all"
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleInputChange}
+                                    placeholder="••••••••"
+                                    required
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pr-12 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] transition-all"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={handlePasswordVisibilityToggle}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-[#EAB308] transition-colors"
+                                >
+                                    {showPassword ? (
+                                        <HiOutlineEyeOff className="text-xl" />
+                                    ) : (
+                                        <HiOutlineEye className="text-xl" />
+                                    )}
+                                </button>
+                            </div>
                             <p className="text-white/40 text-xs mt-1">Min 6 chars: 1 uppercase, 1 lowercase</p>
                         </div>
 
                         {/* Confirm Password Input */}
                         <div>
                             <label className="block text-white text-sm font-bold mb-2">Confirm Password <span className="text-red-500">*</span></label>
-                            <input
-                                type="password"
-                                name="confirmPassword"
-                                value={formData.confirmPassword}
-                                onChange={handleInputChange}
-                                placeholder="••••••••"
-                                required
-                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] transition-all"
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showConfirmPassword ? "text" : "password"}
+                                    name="confirmPassword"
+                                    value={formData.confirmPassword}
+                                    onChange={handleInputChange}
+                                    placeholder="••••••••"
+                                    required
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pr-12 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] transition-all"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={handleConfirmPasswordVisibilityToggle}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-[#EAB308] transition-colors"
+                                >
+                                    {showConfirmPassword ? (
+                                        <HiOutlineEyeOff className="text-xl" />
+                                    ) : (
+                                        <HiOutlineEye className="text-xl" />
+                                    )}
+                                </button>
+                            </div>
                         </div>
 
                         {/* Register Button */}
