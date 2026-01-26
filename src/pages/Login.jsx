@@ -13,7 +13,6 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [forgotEmail, setForgotEmail] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
@@ -168,7 +167,6 @@ const Login = () => {
                         <div className="text-right">
                             <button 
                                 type="button"
-                                onClick={() => setShowForgotPassword(true)}
                                 className="text-[#EAB308] text-xs font-bold hover:underline transition-all"
                             >
                                 Forgot Password?
@@ -218,86 +216,7 @@ const Login = () => {
                 </motion.div>
             </div>
 
-            {/* Forgot Password Modal */}
-            <AnimatePresence>
-                {showForgotPassword && (
-                    <>
-                        <motion.div 
-                            initial={{ opacity: 0 }} 
-                            animate={{ opacity: 1 }} 
-                            exit={{ opacity: 0 }}
-                            onClick={() => setShowForgotPassword(false)}
-                            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
-                        />
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md px-4"
-                        >
-                            <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10 shadow-2xl">
-                                {/* Header */}
-                                <div className="flex items-center justify-between mb-6">
-                                    <div>
-                                        <h2 className="text-2xl font-black text-white">Reset Password</h2>
-                                        <p className="text-white/60 text-sm mt-1">Enter your email to receive reset instructions</p>
-                                    </div>
-                                    <button
-                                        onClick={() => setShowForgotPassword(false)}
-                                        className="text-2xl text-white/60 hover:text-white transition-colors"
-                                    >
-                                        <HiOutlineX />
-                                    </button>
-                                </div>
 
-                                {/* Form */}
-                                <form onSubmit={(e) => { e.preventDefault(); }} className="space-y-5">
-                                    {/* Email Input */}
-                                    <div>
-                                        <label className="block text-white text-sm font-bold mb-2">Email Address</label>
-                                        <input
-                                            type="email"
-                                            value={forgotEmail}
-                                            onChange={(e) => setForgotEmail(e.target.value)}
-                                            placeholder="your@email.com"
-                                            required
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] transition-all"
-                                        />
-                                        <p className="text-white/40 text-xs mt-2">We'll send you a link to reset your password</p>
-                                    </div>
-
-                                    {/* Buttons */}
-                                    <div className="flex gap-3 pt-4">
-                                        <motion.button
-                                            whileHover={{ scale: 1.02 }}
-                                            whileTap={{ scale: 0.98 }}
-                                            type="button"
-                                            onClick={() => setShowForgotPassword(false)}
-                                            className="flex-1 bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition-all"
-                                        >
-                                            Cancel
-                                        </motion.button>
-                                        <motion.button
-                                            whileHover={{ scale: 1.02 }}
-                                            whileTap={{ scale: 0.98 }}
-                                            type="submit"
-                                            className="flex-1 bg-linear-to-r from-[#4F46E5] to-[#7C3AED] text-white font-bold py-3 rounded-xl hover:shadow-lg transition-all"
-                                        >
-                                            Send Link
-                                        </motion.button>
-                                    </div>
-                                </form>
-
-                                {/* Info Box */}
-                                <div className="mt-6 p-4 bg-[#EAB308]/10 border border-[#EAB308]/20 rounded-xl">
-                                    <p className="text-[#EAB308] text-xs font-bold">💡 Note</p>
-                                    <p className="text-white/60 text-xs mt-1">Check your email (including spam folder) for the password reset link. It will expire in 24 hours.</p>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </>
-                )}
-            </AnimatePresence>
         </>
     );
 };
