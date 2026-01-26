@@ -4,6 +4,7 @@ import useAxios from '../hooks/useAxios';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 const AddMovies = () => {
     const { user, signOutUser } = use(AuthContext);
@@ -22,7 +23,6 @@ const AddMovies = () => {
     // Verify user authentication on component mount
     useEffect(() => {
         if (!user || !user.uid) {
-            console.error('User not authenticated');
             toast.error('Please log in to add movies');
             signOutUser().then(() => {
                 navigate('/login');
@@ -33,22 +33,9 @@ const AddMovies = () => {
     }, [user, navigate, signOutUser]);
 
     const genreOptions = [
-        'Action',
-        'Comedy',
-        'Drama',
-        'Horror',
-        'Romance',
-        'Sci-Fi',
-        'Thriller',
-        'Adventure',
-        'Animation',
-        'Crime',
-        'Documentary',
-        'Family',
-        'Fantasy',
-        'Musical',
-        'Mystery',
-        'Western'
+        'Action', 'Comedy', 'Drama', 'Horror', 'Romance', 'Sci-Fi', 'Thriller', 
+        'Adventure', 'Animation', 'Crime', 'Documentary', 'Family', 'Fantasy', 
+        'Musical', 'Mystery', 'Western'
     ];
 
     const handleInputChange = (e) => {
@@ -61,90 +48,78 @@ const AddMovies = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
 
-        try {
-            // Verify user authentication before submission
-            if (!user || !user.uid) {
-                toast.error('Authentication failed. Please log in again.');
-                await signOutUser();
-                navigate('/login');
-                setLoading(false);
-                return;
+        // --- SWEETALERT CONFIRMATION ---
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Do you want to add this movie to the collection?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#4F46E5",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, upload it!",
+            background: "#1E293B",
+            color: "#fff"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                setLoading(true);
+                try {
+                    // Verify user authentication before submission
+                    if (!user || !user.uid) {
+                        toast.error('Authentication failed. Please log in again.');
+                        await signOutUser();
+                        navigate('/login');
+                        setLoading(false);
+                        return;
+                    }
+
+                    // Prepare movie data
+                    const movieData = {
+                        title: formData.title,
+                        posterImg: formData.posterImg,
+                        genre: formData.genre,
+                        releaseDate: formData.releaseDate,
+                        rating: parseFloat(formData.rating),
+                        addedBy: formData.addedBy,
+                        addedAt: new Date().toISOString(),
+                        uid: user?.uid
+                    };
+
+                    // Post to backend
+                    const response = await axiosInstance.post('/movies', movieData);
+
+                    if (response.status === 201 || response.status === 200) {
+                        Swal.fire({
+                            title: "Success!",
+                            text: "The movie has been added successfully.",
+                            icon: "success",
+                            background: "#1E293B",
+                            color: "#fff",
+                            confirmButtonColor: "#4F46E5",
+                        });
+
+                        // Reset form
+                        setFormData({
+                            title: '',
+                            posterImg: '',
+                            genre: '',
+                            releaseDate: '',
+                            rating: '5',
+                            addedBy: user?.displayName || 'Anonymous'
+                        });
+
+                        // Redirect
+                        setTimeout(() => navigate('/allmovie'), 1500);
+                    }
+                } catch (error) {
+                    console.error('Error adding movie:', error);
+                    const errorMessage = error.response?.data?.message || error.message || 'Failed to add movie';
+                    toast.error(errorMessage);
+                } finally {
+                    setLoading(false);
+                }
             }
-
-            // Validate required fields
-            if (!formData.title.trim()) {
-                toast.error('Movie title is required');
-                setLoading(false);
-                return;
-            }
-
-            if (!formData.posterImg.trim()) {
-                toast.error('Poster image link is required');
-                setLoading(false);
-                return;
-            }
-
-            if (!formData.genre) {
-                toast.error('Please select a genre');
-                setLoading(false);
-                return;
-            }
-
-            if (!formData.releaseDate) {
-                toast.error('Release date is required');
-                setLoading(false);
-                return;
-            }
-
-            // Prepare movie data
-            const movieData = {
-                title: formData.title,
-                posterImg: formData.posterImg,
-                genre: formData.genre,
-                releaseDate: formData.releaseDate,
-                rating: parseFloat(formData.rating),
-                addedBy: formData.addedBy,
-                addedAt: new Date().toISOString(),
-                uid: user?.uid
-            };
-
-            console.log('Submitting movie:', movieData);
-
-            // Post to backend
-            const response = await axiosInstance.post('/movies', movieData);
-            
-            console.log('Response:', response.data);
-
-            if (response.status === 401 || response.status === 403) {
-                toast.error('Authentication failed. Please log in again.');
-                await signOutUser();
-                navigate('/login');
-                return;
-            }
-
-            toast.success('Movie added successfully! 🎬');
-            
-            // Reset form
-            setFormData({
-                title: '',
-                posterImg: '',
-                genre: '',
-                releaseDate: '',
-                rating: '5',
-                addedBy: user?.displayName || 'Anonymous'
-            });
-
-            // Redirect to all movies page
-            setTimeout(() => navigate('/allmovie'), 1500);
-        } catch (error) {
-            console.error('Error adding movie:', error);
-            const errorMessage = error.response?.data?.message || error.message || 'Failed to add movie';
-            toast.error(errorMessage);
-        } finally {
-            setLoading(false);
-        }
+        });
     };
 
     return (
@@ -254,7 +229,6 @@ const AddMovies = () => {
                                 readOnly
                                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white/60 focus:outline-none cursor-not-allowed opacity-60"
                             />
-                            <p className="text-white/40 text-xs mt-1">This field is automatically filled with your name</p>
                         </div>
 
                         {/* Submit Button */}
@@ -263,7 +237,7 @@ const AddMovies = () => {
                             whileTap={{ scale: 0.98 }}
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-linear-to-r from-[#4F46E5] to-[#7C3AED] text-white font-bold py-3 rounded-xl hover:shadow-lg transition-all disabled:opacity-50 mt-8"
+                            className="w-full bg-linear-to-r from-[#4F46E5] to-[#7C3AED] text-white font-bold py-3 rounded-xl hover:shadow-lg transition-all disabled:opacity-50 mt-8 cursor-pointer"
                         >
                             {loading ? 'Adding Movie...' : 'Add Movie'}
                         </motion.button>
