@@ -32,37 +32,32 @@ const AuthProvider = ({children}) => {
     };
 
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) =>{
+    useEffect(()=>{
+        const unsubscribe = onAuthStateChanged(auth, (currentUser)=>{
+            // console.log(currentUser);
             setUser(currentUser);
             if(currentUser){
-                const loggedUser = {email: currentUser.email};
-                // Request a JWT from the server. The server should set the JWT as an HttpOnly cookie
-                // via the Set-Cookie header. We include credentials so the browser accepts the cookie.
-                fetch('http://localhost:3000/jwt', {
+                const loggedUser = {email: currentUser.email}
+                fetch('http://localhost:3000/getToken', {
                     method: 'POST',
                     headers: {
-                        'content-type': 'application/json'
+                        'content-type' : 'application/json'
                     },
-                    credentials: 'include',
                     body: JSON.stringify(loggedUser)
                 })
-                .then(res => {
-                    setLoading(false);
-                    return res.json().catch(() => null);
-                })
-                .then(() => {
-                    // token is expected to be stored as an HttpOnly cookie by the server
-                })
-                .catch(() => setLoading(false))
-            } else {
-                // No user; ensure loading is false. If you need to clear the cookie on sign-out,
-                // implement a logout endpoint on the server that clears the HttpOnly cookie.
-                setLoading(false);
-            }
-        })
+                    .then(res => res.json())
+                    .then(data => {
+                        // console.log("After getting token", data);
+                        localStorage.setItem('token', data.token);
+                    });
+            };
+            setLoading(false);
+        });
 
-        return () => unsubscribe();
+        return () =>{
+            unsubscribe();
+        }
+
     }, [])
 
 
