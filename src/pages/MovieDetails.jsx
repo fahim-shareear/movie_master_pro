@@ -67,7 +67,7 @@ const MovieDetails = () => {
                     toast.success("Movie deleted successfully");
                     navigate('/allmovie');
                 } catch (error) {
-                    toast.error("You are not authorized to delete this.");
+                    toast.error(error.message || "Failed to delete movie");
                 }
             }
         });
