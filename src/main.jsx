@@ -6,6 +6,7 @@ import ErrorpageOne from './errorpages/ErrorpageOne';
 import Root from './root/Root';
 import Home from './pages/Home';
 import AllMovies from './pages/AllMovies';
+import AuthProvider from './providers/AuthProvider';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router}></RouterProvider>
+    <AuthProvider>
+      <RouterProvider router={router}></RouterProvider>
+    </AuthProvider>
   </StrictMode>,
 )
