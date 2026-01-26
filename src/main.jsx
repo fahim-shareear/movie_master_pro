@@ -4,11 +4,17 @@ import {createBrowserRouter, RouterProvider} from 'react-router';
 import './index.css'
 import ErrorpageOne from './errorpages/ErrorpageOne';
 import Root from './root/Root';
+import Home from './pages/Home';
+import AllMovies from './pages/AllMovies';
 
 const router = createBrowserRouter([
   {
-    path: '/', errorElement: ErrorpageOne,
-    Component: Root
+    path: '/', errorElement: <ErrorpageOne></ErrorpageOne>,
+    Component: Root,
+    children:[
+      {index: true, Component: Home},
+      {path: '/allmovie', Component: AllMovies},
+    ]
   }
 ])
 
