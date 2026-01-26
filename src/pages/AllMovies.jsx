@@ -75,10 +75,10 @@ const AllMovies = () => {
                 {/* Poster Image */}
                 <div className="relative h-64 sm:h-72 overflow-hidden bg-linear-to-b from-[#4F46E5]/20 to-[#7C3AED]/20">
                     <img
-                        src={movie.posterUrl || 'https://via.placeholder.com/300x400?text=No+Poster'}
+                        src={movie.posterUrl}
                         alt={movie.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        onError={(e) => e.target.src = 'https://via.placeholder.com/300x400?text=No+Poster'}
+                        // onError={(e) => e.target.src = 'https://via.placeholder.com/300x400?text=No+Poster'}
                     />
                     {/* Rating Badge */}
                     <div className="absolute top-3 right-3 bg-[#EAB308] text-black font-bold px-3 py-1 rounded-lg text-sm">
@@ -128,10 +128,10 @@ const AllMovies = () => {
             <div className="relative h-96 rounded-2xl overflow-hidden group">
                 {/* Background Image */}
                 <img
-                    src={movie.posterUrl || 'https://via.placeholder.com/800x400?text=No+Poster'}
+                    src={movie.posterUrl}
                     alt={movie.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    onError={(e) => e.target.src = 'https://via.placeholder.com/800x400?text=No+Poster'}
+                    // onError={(e) => e.target.src = 'https://via.placeholder.com/800x400?text=No+Poster'}
                 />
 
                 {/* Overlay */}
