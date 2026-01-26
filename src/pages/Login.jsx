@@ -4,7 +4,7 @@ import { AuthContext } from '../providers/AuthContext';
 import { FcGoogle } from 'react-icons/fc';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiOutlineX, HiOutlineEye, HiOutlineEyeOff } from 'react-icons/hi';
-import toast from 'react-hot-toast';
+import toast, { ToastBar } from 'react-hot-toast';
 
 const Login = () => {
     const { signInWithEmail, signInWithGoogle } = use(AuthContext);
@@ -78,6 +78,7 @@ const Login = () => {
 
         try {
             await signInWithGoogle();
+            toast.success('Logged in with Google successfully!');
             const from = location.state?.from?.pathname || '/';
             navigate(from);
         } catch (err) {
