@@ -18,14 +18,11 @@ const AllMovies = () => {
 
     // Fetch all movies on component mount
     useEffect(() => {
-        const abortController = new AbortController();
         
         const fetchMovies = async () => {
             try {
                 console.log('Fetching movies from server...');
-                const response = await axiosInstance.get('/movies', {
-                    signal: abortController.signal
-                });
+                const response = await axiosInstance.get('/movies');
                 console.log('Movies fetched:', response.data);
                 setMovies(response.data);
                 setLoading(false);
@@ -41,9 +38,6 @@ const AllMovies = () => {
         fetchMovies();
 
         // Cleanup function to abort request on unmount
-        return () => {
-            abortController.abort();
-        };
     }, []);
 
     // Get recently added movies (first 5)

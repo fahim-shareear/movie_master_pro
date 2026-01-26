@@ -20,8 +20,6 @@ const Home = () => {
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                // We add a timestamp or clear cache logic if needed, 
-                // but usually, a fresh GET request handles this.
                 const response = await axiosInstance.get('/movies');
                 setMovies(response.data);
                 setLoading(false);
@@ -34,19 +32,13 @@ const Home = () => {
         fetchMovies();
     }, []);
 
-    // --- UPDATED REQUIREMENT LOGIC ---
-    
-    // 1. Hero: Show the 4 latest movies in the carousel
-    const heroMovies = [...movies].reverse().slice(0, 4); 
-
+    // --- REQUIREMENT LOGIC ---
+    // 1. Hero: First 4 movies
+    const heroMovies = movies.slice(0, 4); 
     // 2. Top Rated: Highest 5 ratings
     const topRatedMovies = [...movies].sort((a, b) => b.rating - a.rating).slice(0, 5); 
-
-    // 3. Recently Added: STRICTLY the latest 6 movies added to the DB
-    // We sort by _id (which contains a timestamp in MongoDB) or a createdAt field
-    const recentMovies = [...movies]
-        .sort((a, b) => b._id.localeCompare(a._id)) // Sorts by newest first
-        .slice(0, 6); 
+    // 3. Recently Added: Latest 6 items
+    const recentMovies = [...movies].slice(-6).reverse(); 
     
     // 4. Genre Data (Static)
     const staticGenres = ["Action", "Sci-Fi", "Drama", "Comedy", "Horror", "Thriller", "Adventure", "Animation"];
@@ -125,7 +117,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* --- 3. TOP RATED MOVIES --- */}
+            {/* --- 3. TOP RATED MOVIES (5 Highest Rated) --- */}
             <section className="max-w-7xl mx-auto px-4 py-20">
                 <h2 className="text-3xl font-black text-[#EAB308] italic mb-10 border-l-4 border-[#EAB308] pl-4 uppercase">Top Rated Masterpieces</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-6">
@@ -154,7 +146,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* --- 4. RECENTLY ADDED (Synced with DB) --- */}
+            {/* --- 4. RECENTLY ADDED (Latest 6) --- */}
             <section className="bg-white/5 py-20">
                 <div className="max-w-7xl mx-auto px-4">
                     <h2 className="text-3xl font-black text-white italic mb-12 border-l-4 border-[#4F46E5] pl-4 uppercase tracking-tighter">Recently Added</h2>
@@ -181,7 +173,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* --- 5. GENRE SECTION --- */}
+            {/* --- 5. GENRE SECTION (Static) --- */}
             <section className="max-w-7xl mx-auto px-4 py-24">
                 <h2 className="text-center text-4xl font-black italic mb-16 tracking-widest">EXPLORE BY <span className="text-[#EAB308]">GENRE</span></h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -196,7 +188,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* --- 6. ABOUT PLATFORM --- */}
+            {/* --- 6. ABOUT PLATFORM (Static) --- */}
             <section className="bg-linear-to-t from-black to-transparent py-24 border-t border-white/5">
                 <div className="max-w-5xl mx-auto px-6 text-center">
                     <h2 className="text-5xl font-black italic text-[#EAB308] mb-8 uppercase">Movie Master Pro</h2>
@@ -205,6 +197,12 @@ const Home = () => {
                         We combine real-time database management with a high-fidelity user interface, allowing you to curate, 
                         explore, and celebrate the world of cinema without boundaries.
                     </p>
+                    <div className="flex flex-wrap justify-center gap-10 opacity-40 grayscale">
+                        <span className="font-black text-xl italic tracking-tighter">ULTRA-HD</span>
+                        <span className="font-black text-xl italic tracking-tighter">DTS-AUDIO</span>
+                        <span className="font-black text-xl italic tracking-tighter">PRO-UI</span>
+                        <span className="font-black text-xl italic tracking-tighter">DB-CLUSTERS</span>
+                    </div>
                 </div>
             </section>
         </div>
