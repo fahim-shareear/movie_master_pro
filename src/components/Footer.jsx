@@ -81,7 +81,7 @@ const Footer = () => {
                                 <input 
                                     type="email" 
                                     placeholder="Your email" 
-                                    className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-xs focus:outline-none focus:border-[#4F46E5] flex-grow"
+                                    className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-xs focus:outline-none focus:border-[#4F46E5] grow"
                                 />
                                 <button className="bg-[#4F46E5] text-xs font-bold px-4 py-2 rounded-lg hover:bg-[#7C3AED] transition-colors">JOIN</button>
                             </div>

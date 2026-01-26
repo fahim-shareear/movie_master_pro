@@ -46,6 +46,7 @@ const MovieDetails = () => {
         if (id) fetchMovieDetails();
 
         return () => { isMounted = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]); // Removed axiosInstance from dependencies to prevent re-fetch loops
 
     const handleDelete = () => {

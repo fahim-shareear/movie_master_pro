@@ -38,6 +38,7 @@ const AllMovies = () => {
         fetchMovies();
 
         // Cleanup function to abort request on unmount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Get recently added movies (first 5)
