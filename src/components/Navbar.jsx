@@ -4,6 +4,7 @@ import { HiMenuAlt2, HiOutlineX, HiOutlineSearch } from 'react-icons/hi';
 import { MdOutlineWatchLater } from 'react-icons/md';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuthContext } from '../providers/AuthContext';
+import Logo from '../assets/logo.png';
 
 const Navbar = () => {
     const { user, signOutUser } = use(AuthContext);
@@ -68,7 +69,7 @@ const Navbar = () => {
                     
                     <Link to="/" className="flex items-center gap-2 group">
                         <div className="w-10 h-10 bg-linear-to-br from-[#4F46E5] to-[#7C3AED] rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform">
-                            <span className="font-black text-xl italic">M</span>
+                            <img src={Logo} alt="logo" />
                         </div>
                         <h1 className="hidden lg:block font-black text-2xl tracking-tighter uppercase italic">
                             Movie<span className="text-[#EAB308]">Master</span> PRO
