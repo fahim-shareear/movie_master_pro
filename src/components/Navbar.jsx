@@ -156,7 +156,7 @@ const Navbar = () => {
                         {searchTerm.length > 1 && (
                             <motion.div 
                                 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} 
-                                className="absolute top-full left-0 right-0 mt-2 bg-[#1E293B] border border-white/10 rounded-3xl shadow-2xl overflow-hidden z-40 max-h-[400px] overflow-y-auto"
+                                className="absolute top-full left-0 right-0 mt-2 bg-[#1E293B] border border-white/10 rounded-3xl shadow-2xl overflow-hidden z-40 max-h-100 overflow-y-auto"
                             >
                                 {isSearching ? (
                                     <div className="p-6 text-center text-white/40 text-[10px] font-black uppercase tracking-widest">Searching...</div>
