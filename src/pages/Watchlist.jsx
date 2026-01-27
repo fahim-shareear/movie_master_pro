@@ -58,7 +58,7 @@ const Watchlist = () => {
 
                     toast.success("Removed from watchlist");
                 } catch (err) {
-                    toast.error("Failed to remove item");
+                    toast.error(err.message || "Failed to remove item");
                 }
             }
         });
