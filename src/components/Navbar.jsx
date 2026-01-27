@@ -12,7 +12,6 @@ const Navbar = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [isUserMenuOpen, setUserMenuOpen] = useState(false);
     const [watchlistCount, setWatchlistCount] = useState(0); 
-    
     // Search & Filter States
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [selectedGenres, setSelectedGenres] = useState([]);
@@ -217,7 +216,7 @@ const Navbar = () => {
 
                     {user ? (
                         <div className="relative">
-                            <motion.img whileTap={{ scale: 0.9 }} onClick={() => setUserMenuOpen(!isUserMenuOpen)} src={user?.photoURL || 'https://via.placeholder.com/40'} className="w-10 h-10 rounded-full border-2 border-[#EAB308] cursor-pointer object-cover" />
+                            <motion.img whileTap={{ scale: 0.9 }} referrerPolicy='no-referrer' onClick={() => setUserMenuOpen(!isUserMenuOpen)} src={`${user.photoURL}`} className="w-10 h-10 rounded-full border-2 border-[#EAB308] cursor-pointer object-cover" />
                             <AnimatePresence>
                                 {isUserMenuOpen && (
                                     <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 15 }} className="absolute right-0 mt-4 w-64 bg-white text-slate-900 rounded-2xl shadow-2xl overflow-hidden">
