@@ -70,7 +70,7 @@ const AllMovies = () => {
                 {/* Poster Image */}
                 <div className="relative h-64 sm:h-72 overflow-hidden bg-linear-to-b from-[#4F46E5]/20 to-[#7C3AED]/20">
                     <img
-                        src={movie.posterUrl}
+                        src={movie.posterImg}
                         alt={movie.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
@@ -122,7 +122,7 @@ const AllMovies = () => {
             <div className="relative h-96 rounded-2xl overflow-hidden group">
                 {/* Background Image */}
                 <img
-                    src={movie.posterUrl}
+                    src={movie.posterImg}
                     alt={movie.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />

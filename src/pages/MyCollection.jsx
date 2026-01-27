@@ -93,7 +93,7 @@ const MyCollection = () => {
                                 onClick={() => { setSelectedMovie(movie); setIsEditing(false); }}
                                 className="flex items-center gap-5 bg-white/5 p-4 rounded-4xl border border-white/10 hover:border-[#EAB308]/40 transition-all cursor-pointer group"
                             >
-                                <img src={movie.posterUrl} alt={movie.title} className="w-20 h-28 object-cover rounded-2xl shadow-2xl group-hover:scale-105 transition-transform" />
+                                <img src={movie.posterImg} alt={movie.title} className="w-20 h-28 object-cover rounded-2xl shadow-2xl group-hover:scale-105 transition-transform" />
                                 <div className="flex-1">
                                     <h2 className="text-white font-black uppercase text-lg leading-tight">{movie.title}</h2>
                                     <p className="text-[#EAB308] font-bold text-xs uppercase tracking-widest mt-1">{movie.genre}</p>
@@ -118,7 +118,7 @@ const MyCollection = () => {
                         >
                             {!isEditing ? (
                                 <div className="text-center">
-                                    <img src={selectedMovie.posterUrl} alt={selectedMovie.title} className="w-32 h-44 mx-auto rounded-2xl mb-6 shadow-2xl border-4 border-white/5" />
+                                    <img src={selectedMovie.posterImg} alt={selectedMovie.title} className="w-32 h-44 mx-auto rounded-2xl mb-6 shadow-2xl border-4 border-white/5" />
                                     <h2 className="text-3xl font-black text-white uppercase italic leading-none mb-2">{selectedMovie.title}</h2>
                                     <p className="text-white/40 text-[10px] uppercase tracking-[0.3em] mb-10">Creator Management</p>
                                     
@@ -159,8 +159,8 @@ const MyCollection = () => {
                                         <label className="text-[10px] uppercase font-black text-[#EAB308] tracking-widest ml-1">Poster Image URL</label>
                                         <input 
                                             type="url"
-                                            value={formData.posterUrl || ""} 
-                                            onChange={e => setFormData({...formData, posterUrl: e.target.value})} 
+                                            value={formData.posterImg || ""} 
+                                            onChange={e => setFormData({...formData, posterImg: e.target.value})} 
                                             className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-white outline-none focus:border-[#EAB308] transition-colors" 
                                             placeholder="Paste image link here"
                                         />

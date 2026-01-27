@@ -17,6 +17,8 @@ const Home = () => {
     const navigate = useNavigate();
     const axiosInstance = useAxios();
 
+    console.log(movies);
+
     useEffect(() => {
         const fetchMovies = async () => {
             try {
@@ -71,7 +73,7 @@ const Home = () => {
                     {heroMovies.map((movie) => (
                         <SwiperSlide key={movie._id}>
                             <div className="relative h-full w-full">
-                                <img src={movie.posterUrl} className="w-full h-full object-cover" alt={movie.title} />
+                                <img src={movie.posterImg} className="w-full h-full object-cover" alt={movie.title} />
                                 <div className="absolute inset-0 bg-linear-to-r from-[#0F172A] via-[#0F172A]/70 to-transparent flex items-center px-6 md:px-20">
                                     <motion.div initial={{ x: -50, opacity: 0 }} whileInView={{ x: 0, opacity: 1 }} className="max-w-2xl">
                                         <h1 className="text-5xl md:text-7xl font-black italic uppercase mb-4 text-white tracking-tighter">
@@ -128,7 +130,7 @@ const Home = () => {
                             className="bg-white/5 rounded-2xl overflow-hidden border border-white/10 group flex flex-col h-full"
                         >
                             <div className="relative overflow-hidden cursor-pointer" onClick={() => navigate(`/movie/${movie._id}`)}>
-                                <img src={movie.posterUrl} className="h-64 w-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                <img src={movie.posterImg} className="h-64 w-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                 <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-lg text-[#EAB308] text-xs font-black">
                                     ★ {movie.rating}
                                 </div>
@@ -158,7 +160,7 @@ const Home = () => {
                                 className="bg-[#1E293B] p-4 rounded-3xl flex gap-5 border border-white/5 hover:border-[#4F46E5]/50 transition-all group cursor-pointer"
                                 onClick={() => navigate(`/movie/${movie._id}`)}
                             >
-                                <img src={movie.posterUrl} className="w-24 h-32 object-cover rounded-xl shadow-lg" />
+                                <img src={movie.posterImg} className="w-24 h-32 object-cover rounded-xl shadow-lg" />
                                 <div className="flex flex-col justify-between py-1">
                                     <div>
                                         <h3 className="font-black text-lg group-hover:text-[#EAB308] transition-colors line-clamp-1">{movie.title}</h3>
