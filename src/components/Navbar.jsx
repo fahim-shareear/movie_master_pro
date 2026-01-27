@@ -13,7 +13,7 @@ const Navbar = () => {
     const [isUserMenuOpen, setUserMenuOpen] = useState(false);
     const [watchlistCount, setWatchlistCount] = useState(0); 
     
-    // Requirements: Filter & Search States
+    // Search & Filter States
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [selectedGenres, setSelectedGenres] = useState([]);
     const [minRating, setMinRating] = useState(0);
@@ -25,7 +25,7 @@ const Navbar = () => {
     const axiosInstance = useAxios();
     const genresList = ["Action", "Comedy", "Drama", "Sci-Fi", "Horror", "Thriller"];
 
-    // Watchlist Count Logic
+    // Watchlist Logic
     useEffect(() => {
         const fetchCount = () => {
             if (user) {
@@ -41,7 +41,7 @@ const Navbar = () => {
         return () => window.removeEventListener('watchlistUpdated', fetchCount);
     }, [user, axiosInstance]);
 
-    // Instant Search Logic (Requirements: Title and Genre)
+    // Instant Search Logic
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             if (searchTerm.trim().length > 1) {
@@ -81,13 +81,11 @@ const Navbar = () => {
         );
     };
 
-    // 1. PUBLIC ROUTES (RESTORED)
     const publicItems = [
         { name: 'Home', path: '/' },
         { name: 'All Movies', path: '/allmovie' },
     ];
 
-    // 2. PRIVATE ROUTES (RESTORED)
     const privateItems = [
         { name: 'Add Movie', path: '/movies/add' },
         { name: 'My Collection', path: '/movies/my-collection' },
@@ -113,7 +111,7 @@ const Navbar = () => {
         <nav className="bg-[#0F172A] text-white sticky top-0 z-50 shadow-2xl border-b border-white/10">
             <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between gap-6">
                 
-                {/* --- LEFT: Hamburger & Brand (RESTORED) --- */}
+                {/* LEFT: Sidebar Toggle & Brand */}
                 <div className="flex items-center gap-4">
                     <button 
                         onClick={() => setSidebarOpen(true)}
@@ -131,7 +129,7 @@ const Navbar = () => {
                     </Link>
                 </div>
 
-                {/* --- CENTER: Global Search + Instant Modal (UPDATED) --- */}
+                {/* CENTER: Search + Results Modal */}
                 <div className="flex-1 max-w-lg relative hidden md:block">
                     <form onSubmit={handleSearchSubmit} className="relative z-50">
                         <input 
@@ -144,21 +142,35 @@ const Navbar = () => {
                             className="w-full bg-white/5 border border-white/10 rounded-full py-2.5 px-12 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm"
                         />
                         <HiOutlineSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[#EAB308] text-xl" />
-                        <button type="button" onClick={() => setIsFilterOpen(!isFilterOpen)} className={`absolute right-4 top-1/2 -translate-y-1/2 ${isFilterOpen ? 'text-[#EAB308]' : 'text-white/40'}`}><HiOutlineAdjustments size={20} /></button>
+                        <button 
+                            type="button" 
+                            onClick={() => setIsFilterOpen(!isFilterOpen)} 
+                            className={`absolute right-4 top-1/2 -translate-y-1/2 transition-colors ${isFilterOpen ? 'text-[#EAB308]' : 'text-white/40 hover:text-white'}`}
+                        >
+                            <HiOutlineAdjustments size={20} />
+                        </button>
                     </form>
 
-                    {/* Instant Search Results Modal */}
+                    {/* Instant Search Results Dropdown */}
                     <AnimatePresence>
                         {searchTerm.length > 1 && (
-                            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute top-full left-0 right-0 mt-2 bg-[#1E293B] border border-white/10 rounded-3xl shadow-2xl overflow-hidden z-40 max-h-[400px] overflow-y-auto">
+                            <motion.div 
+                                initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} 
+                                className="absolute top-full left-0 right-0 mt-2 bg-[#1E293B] border border-white/10 rounded-3xl shadow-2xl overflow-hidden z-40 max-h-[400px] overflow-y-auto"
+                            >
                                 {isSearching ? (
-                                    <div className="p-6 text-center text-white/40 text-[10px] font-black uppercase tracking-[0.2em]">Searching...</div>
+                                    <div className="p-6 text-center text-white/40 text-[10px] font-black uppercase tracking-widest">Searching...</div>
                                 ) : searchResults.length > 0 ? (
                                     <div className="p-2">
                                         {searchResults.map((movie) => (
-                                            <Link key={movie._id} to={`/movie/${movie._id}`} onClick={() => {setSearchTerm(""); setSearchResults([]);}} className="flex items-center gap-4 p-3 hover:bg-white/5 rounded-2xl transition-colors group">
+                                            <Link 
+                                                key={movie._id} 
+                                                to={`/movie/${movie._id}`} 
+                                                onClick={() => {setSearchTerm(""); setSearchResults([]);}} 
+                                                className="flex items-center gap-4 p-3 hover:bg-white/5 rounded-2xl transition-colors group"
+                                            >
                                                 <img src={movie.posterImg || movie.posterUrl} className="w-10 h-14 object-cover rounded-lg shadow-md" alt="" />
-                                                <div className="flex-1">
+                                                <div className="flex-1 text-left">
                                                     <h4 className="text-sm font-bold text-white group-hover:text-[#EAB308] transition-colors">{movie.title}</h4>
                                                     <p className="text-[10px] text-white/40 uppercase font-black">{movie.genre}</p>
                                                 </div>
@@ -167,13 +179,13 @@ const Navbar = () => {
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="p-6 text-center text-white/40 text-[10px] font-black uppercase tracking-[0.2em]">No movies found</div>
+                                    <div className="p-6 text-center text-white/40 text-[10px] font-black uppercase tracking-widest">No movies found</div>
                                 )}
                             </motion.div>
                         )}
                     </AnimatePresence>
 
-                    {/* Advanced Filter UI */}
+                    {/* Filter UI */}
                     <AnimatePresence>
                         {isFilterOpen && (
                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute top-full mt-4 w-full bg-[#1E293B] border border-white/10 p-6 rounded-3xl shadow-2xl z-30">
@@ -190,21 +202,26 @@ const Navbar = () => {
                     </AnimatePresence>
                 </div>
 
-                {/* --- RIGHT: Watchlist & Auth (RESTORED) --- */}
+                {/* RIGHT: Watchlist & Auth */}
                 <div className="flex items-center gap-4">
                     {user && (
                         <NavLink to="/movies/watchlist" className={({isActive}) => isActive ? "relative text-[#EAB308] text-2xl" : "relative text-2xl hover:text-[#EAB308]"}>
                             <MdOutlineWatchLater />
-                            {watchlistCount > 0 && <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-[#0F172A]">{watchlistCount}</span>}
+                            {watchlistCount > 0 && (
+                                <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-[#0F172A]">
+                                    {watchlistCount}
+                                </span>
+                            )}
                         </NavLink>
                     )}
+
                     {user ? (
                         <div className="relative">
                             <motion.img whileTap={{ scale: 0.9 }} onClick={() => setUserMenuOpen(!isUserMenuOpen)} src={user?.photoURL || 'https://via.placeholder.com/40'} className="w-10 h-10 rounded-full border-2 border-[#EAB308] cursor-pointer object-cover" />
                             <AnimatePresence>
                                 {isUserMenuOpen && (
                                     <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 15 }} className="absolute right-0 mt-4 w-64 bg-white text-slate-900 rounded-2xl shadow-2xl overflow-hidden">
-                                        <div className="p-4 bg-slate-50 border-b flex items-center gap-3">
+                                        <div className="p-4 bg-slate-50 border-b flex items-center gap-3 text-left">
                                             <img src={user?.photoURL || 'https://via.placeholder.com/40'} className="w-10 h-10 rounded-full border border-[#4F46E5] object-cover" alt="" />
                                             <div>
                                                 <p className="font-bold truncate text-xs">{user?.displayName || 'User'}</p>
@@ -219,23 +236,23 @@ const Navbar = () => {
                     ) : (
                         <div className="flex items-center gap-3">
                             <Link to="/login" className="font-bold text-sm hover:text-[#EAB308]">Login</Link>
-                            <Link to="/register" className="bg-linear-to-r from-[#4F46E5] to-[#7C3AED] px-5 py-2 rounded-full font-bold text-sm">Join</Link>
+                            <Link to="/register" className="bg-linear-to-r from-[#4F46E5] to-[#7C3AED] px-5 py-2 rounded-full font-bold text-sm text-white">Join</Link>
                         </div>
                     )}
                 </div>
             </div>
 
-            {/* --- SIDEBAR DRAWER (RESTORED & MAPPED) --- */}
+            {/* SIDEBAR */}
             <AnimatePresence>
                 {isSidebarOpen && (
                     <>
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSidebarOpen(false)} className="fixed inset-0 bg-black/70 backdrop-blur-sm z-60" />
                         <motion.div variants={sidebarVariants} initial="closed" animate="opened" exit="closed" className="fixed top-0 left-0 h-screen w-80 bg-[#0F172A] z-70 p-8 shadow-2xl border-r border-white/5">
                             <div className="flex justify-between items-center mb-10">
-                                <h2 className="text-[#EAB308] font-black text-xl italic">NAVIGATION</h2>
+                                <h2 className="text-[#EAB308] font-black text-xl italic uppercase">Navigation</h2>
                                 <HiOutlineX className="text-3xl cursor-pointer hover:text-red-500" onClick={() => setSidebarOpen(false)} />
                             </div>
-                            <div className="flex flex-col gap-5">
+                            <div className="flex flex-col gap-5 text-left">
                                 {publicItems.map((item) => (
                                     <motion.div key={item.name} variants={itemVariants}>
                                         <NavLink to={item.path} onClick={() => setSidebarOpen(false)} className={({isActive}) => `text-xl font-bold transition-all ${isActive ? 'text-[#EAB308] pl-2' : 'hover:text-[#4F46E5] hover:pl-2'}`}>
