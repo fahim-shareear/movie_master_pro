@@ -19,7 +19,7 @@ const Footer = () => {
         { name: "Home", path: "/" },
         { name: "All Movies", path: "/allmovie" },
         { name: "Add Movie", path: "/movies/add" },
-        { name: "My Watchlist", path: "/watchlist" },
+        { name: "My Watchlist", path: "/movies/watchlist" },
         { name: "About Us", path: "#" }
     ];
 
