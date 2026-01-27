@@ -32,33 +32,23 @@ const AuthProvider = ({children}) => {
     };
 
 
-    useEffect(()=>{
-        const unsubscribe = onAuthStateChanged(auth, (currentUser)=>{
-            console.log(currentUser);
-            setUser(currentUser);
-            if(currentUser){
-                const loggedUser = {email: currentUser.email}
-                fetch('http://localhost:3000', {
-                    method: 'POST',
-                    headers: {
-                        'content-type' : 'application/json'
-                    },
-                    body: JSON.stringify(loggedUser)
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        // console.log("After getting token", data);
-                        localStorage.setItem('token', data.token);
-                    });
-            };
-            setLoading(false);
-        });
-
-        return () =>{
-            unsubscribe();
+    useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+        setUser(currentUser);
+        
+        if (currentUser) {
+            // Get the token directly from Firebase
+            const token = await currentUser.getIdToken();
+            localStorage.setItem('token', token);
+        } else {
+            localStorage.removeItem('token');
         }
+        
+        setLoading(false);
+    });
 
-    }, [])
+    return () => unsubscribe();
+}, []);
 
 
     const authInfo = {
