@@ -1,16 +1,39 @@
-import React, { useState, use } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { Link, useNavigate, NavLink } from 'react-router'; 
 import { HiMenuAlt2, HiOutlineX, HiOutlineSearch } from 'react-icons/hi';
 import { MdOutlineWatchLater } from 'react-icons/md';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuthContext } from '../providers/AuthContext';
+import useAxios from '../hooks/useAxios';
 import Logo from '../assets/logo.png';
 
 const Navbar = () => {
     const { user, signOutUser } = use(AuthContext);
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [isUserMenuOpen, setUserMenuOpen] = useState(false);
+    const [watchlistCount, setWatchlistCount] = useState(0); 
     const navigate = useNavigate();
+    const axiosInstance = useAxios();
+
+    // Logic to fetch and listen for watchlist updates
+    useEffect(() => {
+        const fetchCount = () => {
+            if (user) {
+                axiosInstance.get('/watchlist')
+                    .then(res => setWatchlistCount(res.data.length))
+                    .catch(err => console.error("Watchlist count error", err));
+            } else {
+                setWatchlistCount(0);
+            }
+        };
+
+        fetchCount();
+
+        // Listen for the signal from Watchlist or MovieDetails pages
+        window.addEventListener('watchlistUpdated', fetchCount);
+        
+        return () => window.removeEventListener('watchlistUpdated', fetchCount);
+    }, [user, axiosInstance]);
 
     const handleLogout = async () => {
         try {
@@ -31,7 +54,7 @@ const Navbar = () => {
     const privateItems = [
         { name: 'Add Movie', path: '/movies/add' },
         { name: 'My Collection', path: '/movies/my-collection' },
-        { name: 'My Watchlist', path: '/watchlist' },
+        { name: 'My Watchlist', path: '/movies/watchlist' },
     ];
 
     const sidebarVariants = {
@@ -90,10 +113,18 @@ const Navbar = () => {
 
                 {/* --- RIGHT: Watchlist & Auth --- */}
                 <div className="flex items-center gap-4">
-                    {/* Private Icon: Only show Watchlist link if logged in */}
+                    {/* Private Icon: Watchlist link with indicator badge */}
                     {user && (
-                        <NavLink to="/watchlist" className={({isActive}) => isActive ? "text-[#EAB308] text-2xl" : "text-2xl hover:text-[#EAB308]"}>
+                        <NavLink 
+                            to="/movies/watchlist" 
+                            className={({isActive}) => isActive ? "relative text-[#EAB308] text-2xl" : "relative text-2xl hover:text-[#EAB308]"}
+                        >
                             <MdOutlineWatchLater />
+                            {watchlistCount > 0 && (
+                                <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-[#0F172A]">
+                                    {watchlistCount}
+                                </span>
+                            )}
                         </NavLink>
                     )}
 

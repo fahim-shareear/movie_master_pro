@@ -11,12 +11,15 @@ import Register from './pages/Register';
 import AddMovies from './pages/AddMovies';
 import MyCollection from './pages/MyCollection';
 import MovieDetails from './pages/MovieDetails';
+// Import the new Watchlist component
+import Watchlist from './pages/Watchlist'; 
 import AuthProvider from './providers/AuthProvider';
 import PrivateRoutes from './routes/PrivateRoutes';
 
 const router = createBrowserRouter([
   {
-    path: '/', errorElement: <ErrorpageOne></ErrorpageOne>,
+    path: '/', 
+    errorElement: <ErrorpageOne></ErrorpageOne>,
     Component: Root,
     children:[
       {index: true, Component: Home},
@@ -32,6 +35,11 @@ const router = createBrowserRouter([
         path: '/movies/my-collection',
         Component: () => <PrivateRoutes><MyCollection /></PrivateRoutes>
       },
+      // --- WATCHLIST PRIVATE ROUTE ---
+      {
+        path: '/movies/watchlist',
+        Component: () => <PrivateRoutes><Watchlist /></PrivateRoutes>
+      }
     ]
   }
 ])
