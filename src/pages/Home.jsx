@@ -21,7 +21,8 @@ const Home = () => {
         const fetchMovies = async () => {
             try {
                 const response = await axiosInstance.get('/movies');
-                setMovies(response.data);
+                // Ensure movies are available before setting state
+                setMovies(response.data || []);
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching movies:', error);
@@ -32,9 +33,22 @@ const Home = () => {
         fetchMovies();
     }, [axiosInstance]);
 
-    const heroMovies = movies.slice(0, 4); 
-    const topRatedMovies = [...movies].sort((a, b) => b.rating - a.rating).slice(0, 5); 
-    const recentMovies = [...movies].slice(-6).reverse(); 
+    
+    // 1. Hero: Show 4 most recent movies in the slider
+    const heroMovies = [...movies]
+        .sort((a, b) => new Date(b.addedAt || b._id) - new Date(a.addedAt || a._id))
+        .slice(0, 4); 
+
+    // 2. Top Rated: Remains sorted by rating
+    const topRatedMovies = [...movies]
+        .sort((a, b) => b.rating - a.rating)
+        .slice(0, 5); 
+
+    // 3. FIXED: Recently Added (Sorts by date and takes the latest 6)
+    const recentMovies = [...movies]
+        .sort((a, b) => new Date(b.addedAt || b._id) - new Date(a.addedAt || a._id))
+        .slice(0, 6); 
+
     const staticGenres = ["Action", "Sci-Fi", "Drama", "Comedy", "Horror", "Thriller", "Adventure", "Animation"];
 
     if (loading) {
@@ -70,7 +84,7 @@ const Home = () => {
                                         <h1 className="text-5xl md:text-7xl font-black italic uppercase mb-4 text-slate-900 dark:text-white tracking-tighter">
                                             {movie.title}
                                         </h1>
-                                        <p className="text-slate-600 dark:text-white/70 text-lg line-clamp-3 mb-8">{movie.plotSummary}</p>
+                                        <p className="text-slate-600 dark:text-white/70 text-lg line-clamp-3 mb-8">{movie.details || movie.plotSummary}</p>
                                         <button 
                                             onClick={() => navigate(`/movie/${movie._id}`)}
                                             className="bg-linear-to-r from-[#4F46E5] to-[#7C3AED] px-10 py-4 rounded-full font-bold flex items-center gap-3 hover:scale-105 transition-transform shadow-lg shadow-indigo-500/20 cursor-pointer text-white"
@@ -143,11 +157,11 @@ const Home = () => {
                                 className="bg-white dark:bg-[#1E293B] p-4 rounded-3xl flex gap-5 border border-slate-200 dark:border-white/5 hover:border-[#4F46E5]/50 transition-all group cursor-pointer shadow-sm dark:shadow-none"
                                 onClick={() => navigate(`/movie/${movie._id}`)}
                             >
-                                <img src={movie.posterImg} className="w-24 h-32 object-cover rounded-xl shadow-lg" />
+                                <img src={movie.posterImg} className="w-24 h-32 object-cover rounded-xl shadow-lg" alt={movie.title} />
                                 <div className="flex flex-col justify-between py-1">
                                     <div>
                                         <h3 className="font-black text-lg text-slate-900 dark:text-white group-hover:text-[#EAB308] transition-colors line-clamp-1">{movie.title}</h3>
-                                        <p className="text-slate-400 dark:text-white/40 text-xs uppercase mt-1 tracking-widest">{movie.genre} • {movie.releaseYear}</p>
+                                        <p className="text-slate-400 dark:text-white/40 text-xs uppercase mt-1 tracking-widest">{movie.genre} • {movie.releaseDate?.split('-')[0] || 'N/A'}</p>
                                     </div>
                                     <button className="text-[#EAB308] text-[10px] font-black tracking-widest uppercase flex items-center gap-2 hover:gap-3 transition-all cursor-pointer">
                                         View Details <HiOutlineArrowRight />
@@ -183,7 +197,6 @@ const Home = () => {
                         We combine real-time database management with a high-fidelity user interface, allowing you to curate, 
                         explore, and celebrate the world of cinema without boundaries.
                     </p>
-                    {/* FIXED: Removed invert logic and applied explicit slate color for light mode */}
                     <div className="flex flex-wrap justify-center gap-10 opacity-60">
                         <span className="font-black text-xl italic tracking-tighter text-slate-400 dark:text-white/30">ULTRA-HD</span>
                         <span className="font-black text-xl italic tracking-tighter text-slate-400 dark:text-white/30">DTS-AUDIO</span>
