@@ -4,13 +4,17 @@ import useAxios from '../hooks/useAxios';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router';
-import Swal from 'sweetalert2'; // Import SweetAlert2
+import Swal from 'sweetalert2';
 
 const AddMovies = () => {
     const { user, signOutUser } = use(AuthContext);
     const axiosInstance = useAxios();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    
+    // Theme detection for SweetAlert2
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
     const [formData, setFormData] = useState({
         title: '',
         posterImg: '',
@@ -20,7 +24,6 @@ const AddMovies = () => {
         addedBy: user?.displayName || 'Anonymous'
     });
 
-    // Verify user authentication on component mount
     useEffect(() => {
         if (!user || !user.uid) {
             toast.error('Please log in to add movies');
@@ -49,7 +52,6 @@ const AddMovies = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // --- SWEETALERT CONFIRMATION ---
         Swal.fire({
             title: "Are you sure?",
             text: "Do you want to add this movie to the collection?",
@@ -58,13 +60,12 @@ const AddMovies = () => {
             confirmButtonColor: "#4F46E5",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, upload it!",
-            background: "#1E293B",
-            color: "#fff"
+            background: isDark ? "#1E293B" : "#fff",
+            color: isDark ? "#fff" : "#0F172A"
         }).then(async (result) => {
             if (result.isConfirmed) {
                 setLoading(true);
                 try {
-                    // Verify user authentication before submission
                     if (!user || !user.uid) {
                         toast.error('Authentication failed. Please log in again.');
                         await signOutUser();
@@ -73,7 +74,6 @@ const AddMovies = () => {
                         return;
                     }
 
-                    // Prepare movie data
                     const movieData = {
                         title: formData.title,
                         posterImg: formData.posterImg,
@@ -85,7 +85,6 @@ const AddMovies = () => {
                         uid: user?.uid
                     };
 
-                    // Post to backend
                     const response = await axiosInstance.post('/movies', movieData);
 
                     if (response.status === 201 || response.status === 200) {
@@ -93,12 +92,11 @@ const AddMovies = () => {
                             title: "Success!",
                             text: "The movie has been added successfully.",
                             icon: "success",
-                            background: "#1E293B",
-                            color: "#fff",
+                            background: isDark ? "#1E293B" : "#fff",
+                            color: isDark ? "#fff" : "#0F172A",
                             confirmButtonColor: "#4F46E5",
                         });
 
-                        // Reset form
                         setFormData({
                             title: '',
                             posterImg: '',
@@ -108,11 +106,9 @@ const AddMovies = () => {
                             addedBy: user?.displayName || 'Anonymous'
                         });
 
-                        // Redirect
                         setTimeout(() => navigate('/allmovie'), 1500);
                     }
                 } catch (error) {
-                    console.error('Error adding movie:', error);
                     const errorMessage = error.response?.data?.message || error.message || 'Failed to add movie';
                     toast.error(errorMessage);
                 } finally {
@@ -123,25 +119,25 @@ const AddMovies = () => {
     };
 
     return (
-        <div className="min-h-screen bg-linear-to-br from-[#0F172A] via-[#1a1f3a] to-[#0F172A] py-12 px-4">
+        <div className="min-h-screen bg-slate-50 dark:bg-linear-to-br dark:from-[#0F172A] dark:via-[#1a1f3a] dark:to-[#0F172A] py-24 px-4 transition-colors duration-300">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 className="max-w-2xl mx-auto"
             >
-                <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10 shadow-2xl">
+                <div className="bg-white dark:bg-white/5 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-12 border border-slate-200 dark:border-white/10 shadow-2xl dark:shadow-none">
                     {/* Header */}
-                    <div className="text-center mb-8">
-                        <h1 className="text-4xl font-black text-white mb-2">Add New Movie</h1>
-                        <p className="text-white/60 text-sm">Share your favorite movie with the community</p>
+                    <div className="text-center mb-10">
+                        <h1 className="text-4xl font-black text-slate-900 dark:text-white mb-3 tracking-tight italic uppercase">Add New Movie</h1>
+                        <p className="text-slate-500 dark:text-white/60 text-sm font-medium">Share your favorite movie with the community</p>
                     </div>
 
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Movie Title */}
                         <div>
-                            <label className="block text-white text-sm font-bold mb-2">Movie Title <span className="text-red-500">*</span></label>
+                            <label className="block text-slate-700 dark:text-white text-sm font-bold mb-2 ml-1">Movie Title <span className="text-red-500">*</span></label>
                             <input
                                 type="text"
                                 name="title"
@@ -149,13 +145,13 @@ const AddMovies = () => {
                                 onChange={handleInputChange}
                                 placeholder="Enter movie title"
                                 required
-                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] transition-all"
+                                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] transition-all"
                             />
                         </div>
 
                         {/* Poster Image Link */}
                         <div>
-                            <label className="block text-white text-sm font-bold mb-2">Poster Image Link <span className="text-red-500">*</span></label>
+                            <label className="block text-slate-700 dark:text-white text-sm font-bold mb-2 ml-1">Poster Image Link <span className="text-red-500">*</span></label>
                             <input
                                 type="url"
                                 name="posterImg"
@@ -163,47 +159,48 @@ const AddMovies = () => {
                                 onChange={handleInputChange}
                                 placeholder="https://example.com/poster.jpg"
                                 required
-                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] transition-all"
+                                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] transition-all"
                             />
-                            <p className="text-white/40 text-xs mt-1">Link to the movie poster image</p>
                         </div>
 
-                        {/* Genre Selection */}
-                        <div>
-                            <label className="block text-white text-sm font-bold mb-2">Genre <span className="text-red-500">*</span></label>
-                            <select
-                                name="genre"
-                                value={formData.genre}
-                                onChange={handleInputChange}
-                                required
-                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] transition-all cursor-pointer"
-                            >
-                                <option value="" className="bg-[#0F172A] text-white">Select a genre</option>
-                                {genreOptions.map((g) => (
-                                    <option key={g} value={g} className="bg-[#0F172A] text-white">
-                                        {g}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Genre Selection */}
+                            <div>
+                                <label className="block text-slate-700 dark:text-white text-sm font-bold mb-2 ml-1">Genre <span className="text-red-500">*</span></label>
+                                <select
+                                    name="genre"
+                                    value={formData.genre}
+                                    onChange={handleInputChange}
+                                    required
+                                    className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#4F46E5] transition-all cursor-pointer appearance-none"
+                                >
+                                    <option value="" className="bg-white dark:bg-[#0F172A] text-slate-900 dark:text-white">Select a genre</option>
+                                    {genreOptions.map((g) => (
+                                        <option key={g} value={g} className="bg-white dark:bg-[#0F172A] text-slate-900 dark:text-white">
+                                            {g}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
 
-                        {/* Release Date */}
-                        <div>
-                            <label className="block text-white text-sm font-bold mb-2">Release Date <span className="text-red-500">*</span></label>
-                            <input
-                                type="date"
-                                name="releaseDate"
-                                value={formData.releaseDate}
-                                onChange={handleInputChange}
-                                required
-                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#4F46E5] transition-all cursor-pointer"
-                            />
+                            {/* Release Date */}
+                            <div>
+                                <label className="block text-slate-700 dark:text-white text-sm font-bold mb-2 ml-1">Release Date <span className="text-red-500">*</span></label>
+                                <input
+                                    type="date"
+                                    name="releaseDate"
+                                    value={formData.releaseDate}
+                                    onChange={handleInputChange}
+                                    required
+                                    className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#4F46E5] transition-all cursor-pointer"
+                                />
+                            </div>
                         </div>
 
                         {/* Rating */}
                         <div>
-                            <label className="block text-white text-sm font-bold mb-2">Rating (1-10)</label>
-                            <div className="flex items-center gap-4">
+                            <label className="block text-slate-700 dark:text-white text-sm font-bold mb-2 ml-1">Rating (1-10)</label>
+                            <div className="flex items-center gap-6 bg-slate-50 dark:bg-white/5 p-4 rounded-2xl border border-slate-200 dark:border-white/10">
                                 <input
                                     type="range"
                                     name="rating"
@@ -212,9 +209,9 @@ const AddMovies = () => {
                                     step="0.5"
                                     value={formData.rating}
                                     onChange={handleInputChange}
-                                    className="flex-1 h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#4F46E5]"
+                                    className="flex-1 h-2 bg-slate-200 dark:bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#4F46E5]"
                                 />
-                                <span className="bg-[#4F46E5] text-white font-bold px-3 py-2 rounded-lg min-w-15 text-center">
+                                <span className="bg-linear-to-r from-[#4F46E5] to-[#7C3AED] text-white font-black px-5 py-2 rounded-xl min-w-15 text-center shadow-lg">
                                     {formData.rating}
                                 </span>
                             </div>
@@ -222,12 +219,12 @@ const AddMovies = () => {
 
                         {/* Added By (Read-only) */}
                         <div>
-                            <label className="block text-white text-sm font-bold mb-2">Added By</label>
+                            <label className="block text-slate-400 dark:text-white/30 text-[10px] font-black uppercase tracking-widest mb-2 ml-1">Contributor</label>
                             <input
                                 type="text"
                                 value={formData.addedBy}
                                 readOnly
-                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white/60 focus:outline-none cursor-not-allowed opacity-60"
+                                className="w-full bg-transparent border border-dashed border-slate-300 dark:border-white/10 rounded-2xl px-5 py-4 text-slate-400 dark:text-white/40 focus:outline-none cursor-not-allowed italic text-sm"
                             />
                         </div>
 
@@ -237,9 +234,9 @@ const AddMovies = () => {
                             whileTap={{ scale: 0.98 }}
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-linear-to-r from-[#4F46E5] to-[#7C3AED] text-white font-bold py-3 rounded-xl hover:shadow-lg transition-all disabled:opacity-50 mt-8 cursor-pointer"
+                            className="w-full bg-linear-to-r from-[#4F46E5] to-[#7C3AED] text-white font-black py-5 rounded-2xl hover:shadow-2xl hover:shadow-indigo-500/30 transition-all disabled:opacity-50 mt-8 cursor-pointer uppercase tracking-widest text-sm"
                         >
-                            {loading ? 'Adding Movie...' : 'Add Movie'}
+                            {loading ? 'Adding Movie...' : 'Add Movie to Collection'}
                         </motion.button>
                     </form>
                 </div>
