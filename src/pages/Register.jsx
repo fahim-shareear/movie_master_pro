@@ -91,7 +91,7 @@ const Register = () => {
             
             await updateProfile(result.user, {
                 displayName: formData.name,
-                photoURL: formData.photoURL || 'https://via.placeholder.com/150'
+                photoURL: formData.photoURL
             });
 
             // Save to Backend
@@ -99,13 +99,13 @@ const Register = () => {
                 uid: result.user.uid,
                 name: formData.name,
                 email: formData.email,
-                photoURL: formData.photoURL || 'https://via.placeholder.com/150',
+                photoURL: formData.photoURL,
                 registeredAt: new Date().toISOString()
             };
 
             console.log('Sending user data to server:', userData);
 
-            const response = await fetch('http://localhost:3000/users', {
+            const response = await fetch('https://moviemasterproserver.vercel.app/users', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData)
@@ -150,7 +150,7 @@ const Register = () => {
 
             console.log('Sending Google user data to server:', userData);
 
-            const response = await fetch('http://localhost:3000/users', {
+            const response = await fetch('https://moviemasterproserver.vercel.app/users', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData)
