@@ -124,7 +124,7 @@ const Navbar = () => {
                     </button>
                     <Link to="/" className="flex items-center gap-2 group">
                         <div className="w-10 h-10 bg-linear-to-br from-[#4F46E5] to-[#7C3AED] rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform">
-                            <img src={Logo} alt="logo" />
+                            <img src={Logo} alt="logo" className="rounded-xl" />
                         </div>
                         <h1 className="hidden lg:block font-black text-2xl tracking-tighter uppercase italic">
                             Movie<span className="text-[#EAB308]">Master</span> PRO
