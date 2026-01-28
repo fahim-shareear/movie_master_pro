@@ -1,27 +1,7 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-@layer base {
-  :root {
-    --bg-main: #f8fafc;    /* Light Mode Gray-50 */
-    --text-main: #0f172a;  /* Light Mode Dark Blue */
-    --card-bg: #ffffff;
-  }
-
-  .dark {
-    --bg-main: #0f172a;    /* Your Midnight Blue */
-    --text-main: #f8fafc;  /* White Text */
-    --card-bg: #1e293b;    /* Slightly lighter blue for cards */
-  }
-
-  body {
-    @apply transition-colors duration-300;
-    background-color: var(--bg-main);
-    color: var(--text-main);
-  }
-
-  /* This fixes all your headings and paragraphs at once */
-  h1, h2, h3, h4, h5, h6, p, span {
-    @apply transition-colors duration-300;
-  }
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
 }
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));

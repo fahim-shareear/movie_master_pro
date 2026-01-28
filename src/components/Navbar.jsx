@@ -6,9 +6,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AuthContext } from '../providers/AuthContext';
 import useAxios from '../hooks/useAxios';
 import Logo from '../assets/logo.png';
+import useTheme from '../hooks/useTheme';
 
 const Navbar = () => {
     const { user, signOutUser } = use(AuthContext);
+    const { theme, toggleTheme } = useTheme();
+    
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [isUserMenuOpen, setUserMenuOpen] = useState(false);
     const [watchlistCount, setWatchlistCount] = useState(0); 
@@ -107,7 +110,8 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="bg-[#0F172A] text-white sticky top-0 z-50 shadow-2xl border-b border-white/10">
+        /* CHANGED: Added bg-white and dark:bg-[#0F172A] so the background actually switches */
+        <nav className="bg-white dark:bg-[#0F172A] text-slate-900 dark:text-white sticky top-0 z-50 shadow-2xl border-b border-slate-200 dark:border-white/10 transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between gap-6">
                 
                 {/* LEFT: Sidebar Toggle & Brand */}
@@ -138,13 +142,14 @@ const Navbar = () => {
                             placeholder="Search title or genre..." 
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-white/5 border border-white/10 rounded-full py-2.5 px-12 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm"
+                            /* CHANGED: Input background reacts to theme */
+                            className="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full py-2.5 px-12 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm text-slate-900 dark:text-white"
                         />
                         <HiOutlineSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[#EAB308] text-xl" />
                         <button 
                             type="button" 
                             onClick={() => setIsFilterOpen(!isFilterOpen)} 
-                            className={`absolute right-4 top-1/2 -translate-y-1/2 transition-colors ${isFilterOpen ? 'text-[#EAB308]' : 'text-white/40 hover:text-white'}`}
+                            className={`absolute right-4 top-1/2 -translate-y-1/2 transition-colors ${isFilterOpen ? 'text-[#EAB308]' : 'text-slate-400 dark:text-white/40 hover:text-[#4F46E5] dark:hover:text-white'}`}
                         >
                             <HiOutlineAdjustments size={20} />
                         </button>
@@ -155,10 +160,11 @@ const Navbar = () => {
                         {searchTerm.length > 1 && (
                             <motion.div 
                                 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} 
-                                className="absolute top-full left-0 right-0 mt-2 bg-[#1E293B] border border-white/10 rounded-3xl shadow-2xl overflow-hidden z-40 max-h-100 overflow-y-auto"
+                                /* CHANGED: Dropdown background reacts to theme */
+                                className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 rounded-3xl shadow-2xl overflow-hidden z-40 max-h-100 overflow-y-auto"
                             >
                                 {isSearching ? (
-                                    <div className="p-6 text-center text-white/40 text-[10px] font-black uppercase tracking-widest">Searching...</div>
+                                    <div className="p-6 text-center text-slate-400 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">Searching...</div>
                                 ) : searchResults.length > 0 ? (
                                     <div className="p-2">
                                         {searchResults.map((movie) => (
@@ -166,19 +172,19 @@ const Navbar = () => {
                                                 key={movie._id} 
                                                 to={`/movie/${movie._id}`} 
                                                 onClick={() => {setSearchTerm(""); setSearchResults([]);}} 
-                                                className="flex items-center gap-4 p-3 hover:bg-white/5 rounded-2xl transition-colors group"
+                                                className="flex items-center gap-4 p-3 hover:bg-slate-50 dark:hover:bg-white/5 rounded-2xl transition-colors group"
                                             >
                                                 <img src={movie.posterImg || movie.posterUrl} className="w-10 h-14 object-cover rounded-lg shadow-md" alt="" />
                                                 <div className="flex-1 text-left">
-                                                    <h4 className="text-sm font-bold text-white group-hover:text-[#EAB308] transition-colors">{movie.title}</h4>
-                                                    <p className="text-[10px] text-white/40 uppercase font-black">{movie.genre}</p>
+                                                    <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#EAB308] transition-colors">{movie.title}</h4>
+                                                    <p className="text-[10px] text-slate-400 dark:text-white/40 uppercase font-black">{movie.genre}</p>
                                                 </div>
-                                                <HiOutlinePlay className="text-white/20 group-hover:text-[#EAB308]" />
+                                                <HiOutlinePlay className="text-slate-300 dark:text-white/20 group-hover:text-[#EAB308]" />
                                             </Link>
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="p-6 text-center text-white/40 text-[10px] font-black uppercase tracking-widest">No movies found</div>
+                                    <div className="p-6 text-center text-slate-400 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">No movies found</div>
                                 )}
                             </motion.div>
                         )}
@@ -187,15 +193,15 @@ const Navbar = () => {
                     {/* Filter UI */}
                     <AnimatePresence>
                         {isFilterOpen && (
-                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute top-full mt-4 w-full bg-[#1E293B] border border-white/10 p-6 rounded-3xl shadow-2xl z-30">
+                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute top-full mt-4 w-full bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-white/10 p-6 rounded-3xl shadow-2xl z-30">
                                 <p className="text-[10px] font-black text-[#EAB308] uppercase tracking-widest mb-3">Genres ($in)</p>
                                 <div className="flex flex-wrap gap-2 mb-5">
                                     {genresList.map(g => (
-                                        <button key={g} type="button" onClick={() => toggleGenre(g)} className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase transition-all ${selectedGenres.includes(g) ? 'bg-[#4F46E5] border-[#4F46E5]' : 'bg-white/5 border-white/10 border'}`}>{g}</button>
+                                        <button key={g} type="button" onClick={() => toggleGenre(g)} className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase transition-all ${selectedGenres.includes(g) ? 'bg-[#4F46E5] text-white border-[#4F46E5]' : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 border text-slate-600 dark:text-white'}`}>{g}</button>
                                     ))}
                                 </div>
                                 <p className="text-[10px] font-black text-[#EAB308] uppercase tracking-widest mb-3">Min Rating: {minRating}</p>
-                                <input type="range" min="0" max="10" step="0.5" value={minRating} onChange={(e) => setMinRating(e.target.value)} className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#EAB308]" />
+                                <input type="range" min="0" max="10" step="0.5" value={minRating} onChange={(e) => setMinRating(e.target.value)} className="w-full h-1 bg-slate-200 dark:bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#EAB308]" />
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -203,11 +209,20 @@ const Navbar = () => {
 
                 {/* RIGHT: Watchlist & Auth */}
                 <div className="flex items-center gap-4">
+                    
+                    {/* THEME TOGGLE */}
+                    <input
+                        type="checkbox"
+                        className="toggle toggle-warning toggle-sm"
+                        checked={theme === "dark"}
+                        onChange={(e) => toggleTheme(e.target.checked)}
+                    />
+
                     {user && (
                         <NavLink to="/movies/watchlist" className={({isActive}) => isActive ? "relative text-[#EAB308] text-2xl" : "relative text-2xl hover:text-[#EAB308]"}>
                             <MdOutlineWatchLater />
                             {watchlistCount > 0 && (
-                                <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-[#0F172A]">
+                                <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-white dark:border-[#0F172A]">
                                     {watchlistCount}
                                 </span>
                             )}
@@ -219,15 +234,15 @@ const Navbar = () => {
                             <motion.img whileTap={{ scale: 0.9 }} referrerPolicy='no-referrer' onClick={() => setUserMenuOpen(!isUserMenuOpen)} src={`${user.photoURL}`} className="w-10 h-10 rounded-full border-2 border-[#EAB308] cursor-pointer object-cover" />
                             <AnimatePresence>
                                 {isUserMenuOpen && (
-                                    <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 15 }} className="absolute right-0 mt-4 w-64 bg-white text-slate-900 rounded-2xl shadow-2xl overflow-hidden">
-                                        <div className="p-4 bg-slate-50 border-b flex items-center gap-3 text-left">
+                                    <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 15 }} className="absolute right-0 mt-4 w-64 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl shadow-2xl overflow-hidden border dark:border-white/10">
+                                        <div className="p-4 bg-slate-50 dark:bg-slate-900/50 border-b dark:border-white/10 flex items-center gap-3 text-left">
                                             <img src={user?.photoURL || 'https://via.placeholder.com/40'} className="w-10 h-10 rounded-full border border-[#4F46E5] object-cover" alt="" />
                                             <div>
                                                 <p className="font-bold truncate text-xs">{user?.displayName || 'User'}</p>
                                                 <button onClick={handleLogout} className="text-[10px] text-red-600 font-bold hover:underline">Sign Out</button>
                                             </div>
                                         </div>
-                                        <Link to="/profile" className="block p-3 hover:bg-slate-100 text-sm font-semibold text-center border-t">Profile</Link>
+                                        <Link to="/profile" className="block p-3 hover:bg-slate-100 dark:hover:bg-white/5 text-sm font-semibold text-center border-t dark:border-white/10">Profile</Link>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
@@ -246,7 +261,8 @@ const Navbar = () => {
                 {isSidebarOpen && (
                     <>
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSidebarOpen(false)} className="fixed inset-0 bg-black/70 backdrop-blur-sm z-60" />
-                        <motion.div variants={sidebarVariants} initial="closed" animate="opened" exit="closed" className="fixed top-0 left-0 h-screen w-80 bg-[#0F172A] z-70 p-8 shadow-2xl border-r border-white/5">
+                        /* CHANGED: Sidebar background reacts to theme */
+                        <motion.div variants={sidebarVariants} initial="closed" animate="opened" exit="closed" className="fixed top-0 left-0 h-screen w-80 bg-white dark:bg-[#0F172A] text-slate-900 dark:text-white z-70 p-8 shadow-2xl border-r border-slate-200 dark:border-white/5">
                             <div className="flex justify-between items-center mb-10">
                                 <h2 className="text-[#EAB308] font-black text-xl italic uppercase">Navigation</h2>
                                 <HiOutlineX className="text-3xl cursor-pointer hover:text-red-500" onClick={() => setSidebarOpen(false)} />

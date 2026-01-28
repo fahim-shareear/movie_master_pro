@@ -24,20 +24,22 @@ const Footer = () => {
     ];
 
     return (
-        <footer className="bg-[#0F172A] border-t border-white/5 pt-16 pb-8 text-white font-sans">
+        /* CHANGED: Switched to conditional background and text colors */
+        <footer className="bg-slate-50 dark:bg-[#0F172A] border-t border-slate-200 dark:border-white/5 pt-16 pb-8 text-slate-900 dark:text-white font-sans transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
                     
                     {/* Brand & Copyright Section */}
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 bg-linear-to-br from-[#4F46E5] to-[#7C3AED] rounded-lg flex items-center justify-center font-black text-sm italic">M</div>
+                            <div className="w-8 h-8 bg-linear-to-br from-[#4F46E5] to-[#7C3AED] rounded-lg flex items-center justify-center font-black text-sm italic text-white">M</div>
                             <span className="text-xl font-black italic tracking-tighter uppercase">MovieMaster<span className="text-[#EAB308]">Pro</span></span>
                         </div>
-                        <p className="text-white/50 text-sm leading-relaxed max-w-xs">
+                        {/* CHANGED: text-opacity adjusted for light/dark visibility */}
+                        <p className="text-slate-500 dark:text-white/50 text-sm leading-relaxed max-w-xs">
                             The ultimate destination for cinematic enthusiasts. Discover, curate, and explore the world of film with professional-grade tools.
                         </p>
-                        <p className="text-white/30 text-xs mt-4">
+                        <p className="text-slate-400 dark:text-white/30 text-xs mt-4">
                             &copy; {currentYear} MovieMaster Pro. All rights reserved.
                         </p>
                     </div>
@@ -50,9 +52,10 @@ const Footer = () => {
                                 <li key={link.name}>
                                     <Link 
                                         to={link.path} 
-                                        className="text-white/60 hover:text-[#4F46E5] transition-colors text-sm flex items-center gap-2 group"
+                                        /* CHANGED: Link text colors to be legible in light mode */
+                                        className="text-slate-600 dark:text-white/60 hover:text-[#4F46E5] dark:hover:text-[#4F46E5] transition-colors text-sm flex items-center gap-2 group"
                                     >
-                                        <span className="w-1 h-1 bg-white/20 rounded-full group-hover:bg-[#4F46E5] transition-colors"></span>
+                                        <span className="w-1 h-1 bg-slate-300 dark:bg-white/20 rounded-full group-hover:bg-[#4F46E5] transition-colors"></span>
                                         {link.name}
                                     </Link>
                                 </li>
@@ -69,21 +72,23 @@ const Footer = () => {
                                     key={index}
                                     href={social.url}
                                     whileHover={{ y: -5 }}
-                                    className={`w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-lg transition-all ${social.color}`}
+                                    /* CHANGED: Social icon circles react to theme */
+                                    className={`w-10 h-10 rounded-full bg-slate-200 dark:bg-white/5 border border-slate-300 dark:border-white/10 flex items-center justify-center text-lg transition-all text-slate-700 dark:text-white ${social.color} hover:text-white`}
                                 >
                                     {social.icon}
                                 </motion.a>
                             ))}
                         </div>
                         <div className="mt-8">
-                            <p className="text-white/30 text-xs uppercase tracking-widest mb-2">Newsletter</p>
+                            <p className="text-slate-400 dark:text-white/30 text-xs uppercase tracking-widest mb-2">Newsletter</p>
                             <div className="flex gap-2">
                                 <input 
                                     type="email" 
                                     placeholder="Your email" 
-                                    className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-xs focus:outline-none focus:border-[#4F46E5] grow"
+                                    /* CHANGED: Input styles for light mode */
+                                    className="bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-4 py-2 text-xs focus:outline-none focus:border-[#4F46E5] grow text-slate-900 dark:text-white"
                                 />
-                                <button className="bg-[#4F46E5] text-xs font-bold px-4 py-2 rounded-lg hover:bg-[#7C3AED] transition-colors">JOIN</button>
+                                <button className="bg-[#4F46E5] text-xs font-bold px-4 py-2 rounded-lg hover:bg-[#7C3AED] transition-colors text-white">JOIN</button>
                             </div>
                         </div>
                     </div>
@@ -91,11 +96,12 @@ const Footer = () => {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-[0.2em] font-bold text-white/20">
+                {/* CHANGED: Adjusted bottom bar borders and opacity */}
+                <div className="border-t border-slate-200 dark:border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400 dark:text-white/20">
                     <div className="flex gap-6">
-                        <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-                        <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-                        <a href="#" className="hover:text-white transition-colors">Cookie Policy</a>
+                        <a href="#" className="hover:text-[#4F46E5] dark:hover:text-white transition-colors">Privacy Policy</a>
+                        <a href="#" className="hover:text-[#4F46E5] dark:hover:text-white transition-colors">Terms of Service</a>
+                        <a href="#" className="hover:text-[#4F46E5] dark:hover:text-white transition-colors">Cookie Policy</a>
                     </div>
                     <div>Designed for Cinephiles</div>
                 </div>
